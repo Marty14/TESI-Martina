@@ -30,7 +30,7 @@ MIN_MERGE = 32
 
 # Calcola il valore minimo del run per TimSort
 def calc_min_run(n):
-    """Calcola il valore minimo del run per TimSort."""
+    """Calcola il valore minimo del run per TimSort.""" 
     r = 0
     while n >= MIN_MERGE:
         r |= n & 1
@@ -39,7 +39,7 @@ def calc_min_run(n):
 
 # Funzione di insertion sort
 def insertion_sort(arr, left, right):
-    """Ordina un array usando l'insertion sort."""
+    """Ordina un array usando l'insertion sort.""" 
     for i in range(left + 1, right + 1):
         key_item = arr[i]
         j = i - 1
@@ -88,7 +88,7 @@ def merge(left, right):
 
 # Funzione per applicare la strategia Alpha Stack
 def apply_alpha_stack_strategy(alpha, stack):
-    """Applica la strategia di alpha stacking."""
+    """Applica la strategia di alpha stacking.""" 
     if len(stack) < 2:
         return False
 
@@ -135,11 +135,11 @@ def alpha_stack_sort(arr, alpha=0.5):
 
 # Funzione per eseguire il clustering con DBSCAN
 def dbscan_clustering(data, eps=0.5, min_samples=5):
-    """Esegui il clustering utilizzando DBSCAN."""
+    """Esegui il clustering utilizzando DBSCAN.""" 
     # Normalizzare i dati prima del clustering
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform([[x] for x in data])
-    
+
     db = DBSCAN(eps=eps, min_samples=min_samples)
     labels = db.fit_predict(data_scaled)
     
@@ -151,7 +151,7 @@ def dbscan_clustering(data, eps=0.5, min_samples=5):
 
 # Funzione per eseguire il clustering con KMeans
 def kmeans_clustering(data, n_clusters=2):
-    """Esegui il clustering utilizzando KMeans."""
+    """Esegui il clustering utilizzando KMeans.""" 
     # Normalizzare i dati prima del clustering
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform([[x] for x in data])
@@ -167,7 +167,7 @@ def kmeans_clustering(data, n_clusters=2):
 
 # Funzione per misurare il tempo di esecuzione
 def measure_execution_time(func, *args, **kwargs):
-    """Misura il tempo di esecuzione di una funzione."""
+    """Misura il tempo di esecuzione di una funzione.""" 
     start_time = time.perf_counter()
     result = func(*args, **kwargs)
     end_time = time.perf_counter()
@@ -176,13 +176,13 @@ def measure_execution_time(func, *args, **kwargs):
 
 # Funzione per visualizzare i cluster
 def plot_clusters(cluster1, cluster2, title, cluster_time):
-    """Crea un grafico dei cluster e stampa il tempo di clustering accanto al grafico."""
+    """Crea un grafico dei cluster e stampa il tempo di clustering accanto al grafico.""" 
     plt.figure(figsize=(10, 5))
-    
+
     # Disegna i due cluster
     plt.scatter(range(len(cluster1)), cluster1, color='r', label='Cluster 1', alpha=0.7)
     plt.scatter(range(len(cluster2)), cluster2, color='g', label='Cluster 2', alpha=0.7)
-    
+
     # Titolo e etichette
     plt.title(title)
     plt.xlabel("Indice")
@@ -197,13 +197,18 @@ def plot_clusters(cluster1, cluster2, title, cluster_time):
 
 # Esecuzione del programma principale
 def main():
+    # Parametri per DBSCAN e KMeans tramite input interattivi
+    eps_value = float(input("Inserisci il valore di eps per DBSCAN (default 0.5): ") or 0.5)  # Impostato tramite input
+    min_samples_value = int(input("Inserisci il valore di min_samples per DBSCAN (default 5): ") or 5)  # Impostato tramite input
+    k_value = int(input("Inserisci il numero di cluster per KMeans (default 3): ") or 3)  # Impostato tramite input
+
     file_path = 'insurance.csv'  # Inserisci il percorso corretto del file CSV
     data = load_csv_data(file_path)
     
     if not data:
         print("Errore nel caricamento dei dati.")
         return
-    
+
     USE_TIMSORT = True  # Imposta a True per usare TimSort, False per Alpha Stack Sort
     if USE_TIMSORT:
         print("Eseguendo TimSort...")
@@ -212,7 +217,7 @@ def main():
         print("Dati ordinati con TimSort:", sorted_data_tim)
 
         # Misura il tempo di clustering con DBSCAN
-        cluster_dbscan, dbscan_time = measure_execution_time(dbscan_clustering, sorted_data_tim)
+        cluster_dbscan, dbscan_time = measure_execution_time(dbscan_clustering, sorted_data_tim, eps=eps_value, min_samples=min_samples_value)
         print("Cluster con DBSCAN:", cluster_dbscan)
         print(f"Tempo di esecuzione DBSCAN: {dbscan_time:.4f} secondi")
         
@@ -220,7 +225,7 @@ def main():
         plot_clusters(cluster_dbscan[0], cluster_dbscan[1], "Cluster con DBSCAN", dbscan_time)
 
         # Misura il tempo di clustering con KMeans
-        cluster_kmeans, kmeans_time = measure_execution_time(kmeans_clustering, sorted_data_tim)
+        cluster_kmeans, kmeans_time = measure_execution_time(kmeans_clustering, sorted_data_tim, n_clusters=k_value)
         print("Cluster con KMeans:", cluster_kmeans)
         print(f"Tempo di esecuzione KMeans: {kmeans_time:.4f} secondi")
         
@@ -233,7 +238,7 @@ def main():
         print("Dati ordinati con Alpha Stack Sort:", sorted_data_alpha_stack)
 
         # Misura il tempo di clustering con DBSCAN
-        cluster_dbscan, dbscan_time = measure_execution_time(dbscan_clustering, sorted_data_alpha_stack)
+        cluster_dbscan, dbscan_time = measure_execution_time(dbscan_clustering, sorted_data_alpha_stack, eps=eps_value, min_samples=min_samples_value)
         print("Cluster con DBSCAN:", cluster_dbscan)
         print(f"Tempo di esecuzione DBSCAN: {dbscan_time:.4f} secondi")
         
@@ -241,7 +246,7 @@ def main():
         plot_clusters(cluster_dbscan[0], cluster_dbscan[1], "Cluster con DBSCAN", dbscan_time)
 
         # Misura il tempo di clustering con KMeans
-        cluster_kmeans, kmeans_time = measure_execution_time(kmeans_clustering, sorted_data_alpha_stack)
+        cluster_kmeans, kmeans_time = measure_execution_time(kmeans_clustering, sorted_data_alpha_stack, n_clusters=k_value)
         print("Cluster con KMeans:", cluster_kmeans)
         print(f"Tempo di esecuzione KMeans: {kmeans_time:.4f} secondi")
         
